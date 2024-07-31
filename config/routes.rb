@@ -9,17 +9,9 @@ Rails.application.routes.draw do
   end
   # Define routes for Devise and user authentication
   devise_for :users, controllers: { registrations: 'users/registrations' }
-  Define authenticated root paths
-  authenticated :user, ->(u) { u.admin? } do
-    root to: "admin#index", as: :admin_root
-  end
-  authenticated :user, ->(u) { !u.admin? } do
-    root to: "home#index", as: :user_root
-  end
+  root "home#index"
   # Define additional routes for public access
-  get "up" => "rails/health#show", as: :rails_health_check
-  # get "admin#index", as: :admin_root
- 
+  get "up" => "rails/health#show", as: :rails_health_check 
   get "admin" => "admin#index", as: :admin_root
   get "cart" => "carts#show"
   post "checkout" => "checkouts#create"
@@ -30,5 +22,4 @@ Rails.application.routes.draw do
   resources :categories, only: [:show]
   resources :products, only: [:show]
   # Define the default root route for non-authenticated users
-  root "home#index"
 end

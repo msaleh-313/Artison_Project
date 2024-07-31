@@ -5,10 +5,10 @@
 
 
     def after_sign_in_path_for(resource)
-      if resource.admin?
+      if resource.role==1
         admin_root_path 
       else
-        user_root_path
+        root_path 
       end
     end
   end

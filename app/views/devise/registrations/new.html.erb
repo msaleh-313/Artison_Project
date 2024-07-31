@@ -17,11 +17,6 @@
   </div>
 
   <div class="form-group">
-    <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(User.roles.keys.map { |role| [role.humanize, role] }), include_blank: true %>
-  </div>
-
-  <div class="form-group">
     <%= f.submit "Sign up" %>
   </div>
 <% end %>
