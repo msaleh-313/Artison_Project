@@ -50,36 +50,82 @@ export default class extends Controller {
     window.location.reload()
   }
 
-  checkout() {
-    const cart = JSON.parse(localStorage.getItem("cart"))
-    const payload = {
-      authenticity_token: "",
-      cart: cart
-    }
+//   checkout() {
 
-    const csrfToken = document.querySelector("[name='csrf-token']").content
+//     //LOCALSTORAGE SE DATA GET KARO JSON KO PARSE KAR K
+//     const cart = JSON.parse(localStorage.getItem("cart"))
 
-    fetch("/checkout", {
+//     // STRIPE API KO DATA BEJHNE K LIYE PAYLOAD TYAR KARO JO SERVER PER JAYEGA
+//     const payload = {
+//       authenticity_token: "",
+//       cart: cart
+//     }
+
+//     //META TAG SE CSRF TOKEN GET KARO SECURITY PURPOSE K LIYE
+//     const csrfToken = document.querySelector("[name='csrf-token']").content
+
+//     fetch("/checkout", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "X-CSRF-Token": csrfToken
+//       },
+//       body: JSON.stringify(payload)
+//     }).then(response => {
+//         if (response.ok) {
+//           response.json().then(body => {
+//             window.location.href = body.url
+//           })
+//         } else {
+//           response.json().then(body => {
+//             const errorEl = document.createElement("div")
+//             errorEl.innerText = `There was an error processing your order. ${body.error}`
+//             let errorContainer = document.getElementById("errorContainer")
+//             errorContainer.appendChild(errorEl)
+//           })
+//         }
+//       })
+//   }
+
+checkout = async () => {
+  // Get cart data from local storage
+  const cart = JSON.parse(localStorage.getItem("cart"));
+
+  // Create payload for Stripe API
+  const payload = {
+    authenticity_token: "",
+    cart: cart
+  };
+
+  // Get CSRF token from meta tag
+  const csrfToken = document.querySelector("[name='csrf-token']").content;
+
+  try {
+    // Send request to server using fetch API
+    const response = await fetch("/checkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": csrfToken
       },
       body: JSON.stringify(payload)
-    }).then(response => {
-        if (response.ok) {
-          response.json().then(body => {
-            window.location.href = body.url
-          })
-        } else {
-          response.json().then(body => {
-            const errorEl = document.createElement("div")
-            errorEl.innerText = `There was an error processing your order. ${body.error}`
-            let errorContainer = document.getElementById("errorContainer")
-            errorContainer.appendChild(errorEl)
-          })
-        }
-      })
-  }
+    });
 
+    if (response.ok) {
+      // Parse JSON response and redirect to Stripe URL
+      const body = await response.json();
+      window.location.href = body.url;
+    } else {
+      // Parse JSON response and display error message
+      const body = await response.json();
+      const errorContainer = document.getElementById("errorContainer");
+      const errorEl = document.createElement("div");
+      errorEl.innerText = `There was an error processing your order. ${body.error}`;
+      errorContainer.appendChild(errorEl);
+    }
+  } catch (error) {
+    // Handle network errors
+    console.error("Error:", error);
+  }
+}
 }

@@ -1,8 +1,10 @@
 class CheckoutsController < ApplicationController
 
 def create
+  puts "hello"
   stripe_secret_key = Rails.application.credentials.dig(:stripe, :secret_key)
   Stripe.api_key = stripe_secret_key
+  puts "Stripe Secret Key: #{Stripe.api_key}"
   cart = params[:cart]
 
   # Array to hold line items for Stripe checkout session
@@ -24,7 +26,7 @@ def create
       return
     end
 
-    # Add line item for Stripe session
+  #   # Add line item for Stripe session
     line_items << {
       quantity: item["quantity"].to_i,
       price_data: {
@@ -36,13 +38,14 @@ def create
         unit_amount: item["price"].to_i
       }
     }
-  end
+   end
 
   # Create a Stripe Checkout session with line items
   session = Stripe::Checkout::Session.create(
     mode: "payment",
     line_items: line_items,
-    success_url: "http://localhost:3000/success",
+    success_url: "http://localhost:3000/",
+    # success_url: "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
     cancel_url: "http://localhost:3000/cancel",
     shipping_address_collection: {
       allowed_countries: ['US', 'CA']
@@ -54,6 +57,7 @@ end
 
 
   def success
+  
     render :success
   end
 
@@ -61,3 +65,6 @@ end
     render :cancel
   end
 end
+
+
+

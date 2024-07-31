@@ -20,6 +20,15 @@
             <%= link_to cart_path, class: "text-gray-500 hover:underline py-2 rounded-md text-md font-medium" do %>
               <%= icon 'fa-solid', 'shopping-cart' %>
             <% end %>
+            <% if user_signed_in? %>
+              <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: "text-gray-500 hover:underline py-2 rounded-md text-md font-medium" %>
+            <% elsif current_page?(root_path) %>
+              <%= link_to 'Sign Up', new_user_registration_path, class: "text-gray-500 hover:underline py-2 rounded-md text-md font-medium" %>
+            <% elsif current_page?(new_user_registration_path) %>
+              <%= link_to 'Login', new_user_session_path, class: "text-gray-500 hover:underline py-2 rounded-md text-md font-medium" %>
+            <% else %>
+              <%= link_to 'Sign Up', new_user_registration_path, class: "text-gray-500 hover:underline py-2 rounded-md text-md font-medium" %>
+            <% end %>
           </div>
         </div>
       </div>
