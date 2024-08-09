@@ -11,12 +11,4 @@ class User < ApplicationRecord
     end
   end
 
-  # def buyer
-  #   type=="buyer" 
-  # end
-
-  # def admin
-  #   type=="admin"    
-  # end
-
 end

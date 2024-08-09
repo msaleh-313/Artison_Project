@@ -15,7 +15,6 @@ User.create(
   password_confirmation: "123456",
   role: 1 
 )
-
 User.create(
   email: "test@admin.com",
   password: "123456", 

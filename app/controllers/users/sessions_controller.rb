@@ -2,27 +2,17 @@
 
 class Users::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
-
-  # GET /resource/sign_in
-  # def new
-  #   super
-  # end
-
-  # POST /resource/sign_in
-  # def create
-  #   super
-  # end
-
-  # DELETE /resource/sign_out
+  after_action :send_signIn_email,only: [:create]
   def destroy
     super
     reset_session
   end
 
-  # protected
+  protected
 
-  # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_in_params
-  #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-  # end
+  def send_signIn_email
+    if user_signed_in?
+      UserMailer.with(user: current_user).signIn_email.deliver_later
+    end
+  end
 end
