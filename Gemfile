@@ -75,3 +75,6 @@ gem "devise", "~> 4.9"
 gem "stripe", "~> 12.0"
 
 gem "pagy"
+
+gem 'mailcatcher', '~> 0.10.0'
+

@@ -8,7 +8,11 @@ Rails.application.routes.draw do
     resources :categories
   end
   # Define routes for Devise and user authentication
-  devise_for :users, controllers: { registrations: 'users/registrations' }
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
+  }
+
   root "home#index"
   # Define additional routes for public access
   get "up" => "rails/health#show", as: :rails_health_check 
@@ -21,5 +25,4 @@ Rails.application.routes.draw do
   # Define routes for categories and products
   resources :categories, only: [:show]
   resources :products, only: [:show]
-  # Define the default root route for non-authenticated users
 end
